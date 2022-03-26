@@ -1,5 +1,5 @@
 import express from "express";
-import { mapOrder } from "./utils/common.js";
+import { mapOrder } from "*/utils/common.js";
 
 const app = express();
 
