@@ -1,0 +1,10 @@
+/node_modules
+/build
+
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+.env.local
+
+.eslintcache

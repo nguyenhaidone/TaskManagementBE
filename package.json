@@ -1,0 +1,32 @@
+{
+  "name": "TaskManagementBE",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint src",
+    "eslint:fix": "eslint --fix src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguyenhaidone/TaskManagementBE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nguyenhaidone/TaskManagementBE/issues"
+  },
+  "homepage": "https://github.com/nguyenhaidone/TaskManagementBE#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.11.0"
+  }
+}
