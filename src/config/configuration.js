@@ -8,6 +8,8 @@ const listDb = async (client) => {
   dbs.databases.forEach((db) => console.log(`- ${db.name}`))
 }
 
+let dbInstance = null
+
 export const connectDB = async () => {
   /**
    * * Init MongoClient and connect
@@ -16,19 +18,24 @@ export const connectDB = async () => {
     useUnifiedTopology: true,
     useNewUrlParser: true
   })
-  try {
-    /**
-     * * Connect db
-     */
-    await client.connect()
-    /**
-     * * Log list db
-     */
-    await listDb(client)
-    console.log('Connected successfully')
-  } catch (e) {
-    console.log(e)
-  } finally {
-    await client.close()
-  }
+
+  /**
+   * * Connect db
+   */
+  await client.connect()
+  /**
+   * * Show list db exist
+   */
+  await listDb(client)
+
+  /**
+   * ! Assign clientdb to dbInstance
+   */
+  dbInstance = client.db(env.DATABASE_NAME)
+  console.log('Connected successfully')
+}
+
+export const getDB = () => {
+  if (!dbInstance) throw new Error('Must connect to Database first')
+  return dbInstance
 }
