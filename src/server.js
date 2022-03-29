@@ -1,7 +1,7 @@
 import express from 'express'
 import { connectDB } from '*/config/configuration'
 import { env } from '*/config/environment'
-import { BoardModel } from '*/models/board.model'
+import { api } from '*/routes/v1'
 
 connectDB()
   .then(() => {
@@ -17,9 +17,16 @@ connectDB()
 
 const bootServer = () => {
   const app = express()
-  app.get('/', async (req, res) => {
-    res.end('hello')
-  })
+
+  /**
+   * !Enable req.body data
+   */
+  app.use(express.json())
+
+  /**
+   * !Use APIs
+   */
+  app.use('/v1', api)
 
   app.listen(env.PORT, env.HOSTNAME, () => {
     console.log('Start successfully, listening on port ' + env.PORT)

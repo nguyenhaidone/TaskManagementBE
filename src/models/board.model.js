@@ -8,7 +8,7 @@ import { getDB } from '*/config/configuration'
 const boardCollectionName = 'boards'
 
 const boardCollectionSchema = Joi.object({
-  title: Joi.string().required().min(2).max(20),
+  title: Joi.string().required().min(1).max(20),
   columnOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null),
@@ -26,7 +26,7 @@ const ValidateSchema = async (data) => {
 /**
  * !API Create new board
  * @param {*} data
- * @returns
+ * @returns {*} result
  */
 const createNew = async (data) => {
   try {
@@ -39,7 +39,7 @@ const createNew = async (data) => {
       .findOne({ _id: result.insertedId })
     return getResult
   } catch (error) {
-    console.log(error)
+    throw new Error(error)
   }
 }
 
