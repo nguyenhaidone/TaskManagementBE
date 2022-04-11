@@ -35,9 +35,13 @@ const ValidateSchema = async (data) => {
 const createNew = async (data) => {
   try {
     const value = await ValidateSchema(data)
+    const insertValue = {
+      ...value,
+      boardId: ObjectId(value.boardId)
+    }
     const result = await getDB()
       .collection(columnCollectionName)
-      .insertOne(value)
+      .insertOne(insertValue)
     const getResult = await getDB()
       .collection(columnCollectionName)
       .findOne({ _id: result.insertedId })
@@ -68,4 +72,30 @@ const update = async (id, data) => {
   }
 }
 
-export const ColumnModel = { createNew, update }
+/**
+ * !API Update cards order in column
+ * @param {string} cardId
+ * @param {string} columnId
+ * @returns {*} result
+ */
+const pushCardOrder = async (columnId, cardId) => {
+  try {
+    const result = await getDB()
+      .collection(columnCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(columnId) },
+        { $push: { cardOrder: cardId } },
+        { returnDocument: 'after' }
+      )
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+export const ColumnModel = {
+  columnCollectionName,
+  createNew,
+  update,
+  pushCardOrder
+}

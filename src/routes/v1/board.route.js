@@ -11,4 +11,6 @@ router
   //   })
   .post(BoardValidations.createNew, BoardController.createNew)
 
+router.route('/:id').get(BoardController.getFullBoard)
+
 export const boardRoute = router
