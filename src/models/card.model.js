@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import { ObjectId } from 'mongodb'
 import { getDB } from '*/config/configuration'
 
 /**
@@ -8,7 +9,7 @@ import { getDB } from '*/config/configuration'
 const cardCollectionName = 'cards'
 
 const cardCollectionSchema = Joi.object({
-  title: Joi.string().required().min(2).max(20),
+  title: Joi.string().required().min(2).max(20).trim(),
   boardId: Joi.string().required(),
   columnId: Joi.string().required(),
   createdAt: Joi.date().timestamp().default(Date.now()),
@@ -41,8 +42,28 @@ const createNew = async (data) => {
       .findOne({ _id: result.insertedId })
     return getResult
   } catch (error) {
-    console.log(error)
+    throw new Error(error)
   }
 }
 
-export const CardModel = { createNew }
+/**
+ * !API Update new card
+ * @param {*} data
+ * @returns
+ */
+const update = async (id, data) => {
+  try {
+    const result = await getDB()
+      .collection(cardCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(id) },
+        { $set: data },
+        { returnDocument: 'after' }
+      )
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+export const CardModel = { createNew, update }
