@@ -34,9 +34,14 @@ const ValidateSchema = async (data) => {
 const createNew = async (data) => {
   try {
     const value = await ValidateSchema(data)
+    const insertValue = {
+      ...value,
+      boardId: ObjectId(value.boardId),
+      columnId: ObjectId(value.columnId)
+    }
     const result = await getDB()
       .collection(cardCollectionName)
-      .insertOne(value)
+      .insertOne(insertValue)
     const getResult = await getDB()
       .collection(cardCollectionName)
       .findOne({ _id: result.insertedId })
@@ -66,4 +71,4 @@ const update = async (id, data) => {
   }
 }
 
-export const CardModel = { createNew, update }
+export const CardModel = { cardCollectionName, createNew, update }

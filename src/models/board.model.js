@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import { ObjectId } from 'mongodb'
 import { getDB } from '*/config/configuration'
 
 /**
@@ -25,7 +26,7 @@ const ValidateSchema = async (data) => {
 
 /**
  * !API Create new board
- * @param {*} data
+ * @param {object} data
  * @returns {*} result
  */
 const createNew = async (data) => {
@@ -43,4 +44,66 @@ const createNew = async (data) => {
   }
 }
 
-export const BoardModel = { createNew }
+/**
+ * !API Update columns order board
+ * @param {string} boardId
+ * @param {string} columnId
+ * @returns {*} result
+ */
+const pushColumnOrder = async (boardId, columnId) => {
+  try {
+    const result = await getDB()
+      .collection(boardCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(boardId) },
+        { $push: { columnOrder: columnId } },
+        { returnDocument: 'after' }
+      )
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+/**
+ * !API Get full board
+ * @param {string} id
+ * @returns {*} result
+ */
+const getFullBoard = async (id) => {
+  try {
+    const result = await getDB()
+      .collection(boardCollectionName)
+      .aggregate([
+        { $match: { _id: ObjectId(id) } },
+        // { $addFields: { _idSample: { $toString: "$_id" } } },
+        {
+          $lookup: {
+            from: 'columns',
+            localField: '_id',
+            foreignField: 'boardId',
+            as: 'columns'
+          }
+        },
+        {
+          $lookup: {
+            from: 'cards',
+            localField: '_id',
+            foreignField: 'boardId',
+            as: 'cards'
+          }
+        }
+      ])
+      .toArray()
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+export const BoardModel = {
+  boardCollectionName,
+  createNew,
+  getFullBoard,
+  pushColumnOrder
+}
