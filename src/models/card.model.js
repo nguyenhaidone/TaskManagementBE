@@ -71,4 +71,33 @@ const update = async (id, data) => {
   }
 }
 
-export const CardModel = { cardCollectionName, createNew, update }
+/**
+ * !API Update cards
+ * @param {list id card need to delete} ids
+ * @returns
+ */
+const updateCards = async (ids) => {
+  try {
+    const tranformIds = ids.map((id) => ObjectId(id))
+    const result = await getDB()
+      .collection(cardCollectionName)
+      .updateMany(
+        {
+          _id: {
+            $in: tranformIds
+          }
+        },
+        {
+          $set: {
+            _destroy: true
+          }
+        },
+        { returnDocument: 'after' }
+      )
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+export const CardModel = { cardCollectionName, createNew, update, updateCards }
