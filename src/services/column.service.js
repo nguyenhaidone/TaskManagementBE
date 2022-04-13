@@ -4,7 +4,7 @@ import { BoardModel } from '*/models/board.model'
 const createNew = async (data) => {
   try {
     const result = await ColumnModel.createNew(data)
-
+    result.cards = []
     /**
      * *Update columnOrder array in board collection
      */
@@ -22,6 +22,8 @@ const createNew = async (data) => {
 const update = async (id, data) => {
   try {
     const updateData = { ...data, updatedAt: Date.now() }
+    if (updateData._id) delete updateData._id
+    if (updateData.cards) delete updateData.cards
     const result = await ColumnModel.update(id, updateData)
     return result
   } catch (error) {

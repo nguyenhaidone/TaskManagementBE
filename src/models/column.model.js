@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '*/config/configuration'
+import { CardModel } from '*/models/card.model'
 
 /**
  * !Define column collections
@@ -58,14 +59,21 @@ const createNew = async (data) => {
  */
 const update = async (id, data) => {
   try {
+    const updatedBoard = {
+      ...data,
+      boardId: ObjectId(data.boardId)
+    }
     const result = await getDB()
       .collection(columnCollectionName)
       .findOneAndUpdate(
         { _id: ObjectId(id) },
-        { $set: data },
+        { $set: updatedBoard },
         { returnDocument: 'after' }
       )
-    console.log(result)
+    console.log(result.value._destroy)
+    if (result.value._destroy) {
+      CardModel.updateCards(result.value.cardOrder)
+    }
     return result.value
   } catch (error) {
     throw new Error(error)
