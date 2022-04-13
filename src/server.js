@@ -1,5 +1,6 @@
 import express from 'express'
-import { connectDB } from '*/config/configuration'
+import cors from 'cors'
+import { connectDB, corsOptions } from '*/config/configuration'
 import { env } from '*/config/environment'
 import { api } from '*/routes/v1'
 
@@ -19,10 +20,13 @@ const bootServer = () => {
   const app = express()
 
   /**
+   * !use cors configuration
+   */
+  app.use(cors(corsOptions))
+  /**
    * !Enable req.body data
    */
   app.use(express.json())
-
   /**
    * !Use APIs
    */
