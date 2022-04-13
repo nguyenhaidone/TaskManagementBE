@@ -39,3 +39,18 @@ export const getDB = () => {
   if (!dbInstance) throw new Error('Must connect to Database first')
   return dbInstance
 }
+
+/**
+ * !Configuring CORS w/ Dynamic Origin
+ */
+const WHITELIST = ['http://localhost:3001', 'http://localhost:3000']
+
+export const corsOptions = {
+  origin: function (origin, callback) {
+    if (WHITELIST.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
