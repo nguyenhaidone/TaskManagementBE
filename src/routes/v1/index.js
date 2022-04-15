@@ -3,6 +3,7 @@ import { httpStatusCode } from '*/utils/constants'
 import { boardRoute } from './board.route'
 import { columnRoute } from './column.route'
 import { cardRoute } from './card.route'
+import { authRoute } from './auth.route'
 
 const router = express.Router()
 
@@ -29,5 +30,10 @@ router.use('/columns', columnRoute)
  * !Card Apis
  */
 router.use('/cards', cardRoute)
+
+/**
+ * !Register Apis
+ */
+router.use('/auth', authRoute)
 
 export const api = router

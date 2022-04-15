@@ -70,7 +70,6 @@ const update = async (id, data) => {
         { $set: updatedBoard },
         { returnDocument: 'after' }
       )
-    console.log(result.value._destroy)
     if (result.value._destroy) {
       CardModel.updateCards(result.value.cardOrder)
     }
