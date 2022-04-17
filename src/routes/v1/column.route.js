@@ -8,7 +8,7 @@ const router = express.Router()
 router
   .route('/')
   .post(
-    AuthMiddleware.isAuth,
+    // AuthMiddleware.isAuth,
     ColumnValidations.createNew,
     ColumnController.createNew
   )
@@ -16,7 +16,7 @@ router
 router
   .route('/:id')
   .put(
-    AuthMiddleware.isAuth,
+    // AuthMiddleware.isAuth,
     ColumnValidations.update,
     ColumnController.update
   )

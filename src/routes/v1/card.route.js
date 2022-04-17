@@ -5,16 +5,16 @@ import { AuthMiddleware } from '*/middlewares/auth.middleware'
 
 const router = express.Router()
 
-router
-  .route('/')
-  .post(
-    AuthMiddleware.isAuth,
-    CardValidations.createNew,
-    CardController.createNew
-  )
+router.route('/').post(
+  // AuthMiddleware.isAuth,
+  CardValidations.createNew,
+  CardController.createNew
+)
 
-router
-  .route('/:id')
-  .put(AuthMiddleware.isAuth, CardValidations.update, CardController.update)
+router.route('/:id').put(
+  // AuthMiddleware.isAuth,
+  CardValidations.update,
+  CardController.update
+)
 
 export const cardRoute = router

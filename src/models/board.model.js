@@ -101,9 +101,34 @@ const getFullBoard = async (id) => {
   }
 }
 
+/**
+ * !API update board
+ * @param {string} id
+ * @returns {*} result
+ */
+const update = async (id, data) => {
+  try {
+    const updatedBoard = { ...data }
+    const result = await getDB()
+      .collection(boardCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(id) },
+        { $set: updatedBoard },
+        { returnDocument: 'after' }
+      )
+    // if (result.value._destroy) {
+    //   CardModel.updateCards(result.value.cardOrder)
+    // }
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const BoardModel = {
   boardCollectionName,
   createNew,
   getFullBoard,
-  pushColumnOrder
+  pushColumnOrder,
+  update
 }

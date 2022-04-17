@@ -58,11 +58,20 @@ const createNew = async (data) => {
  */
 const update = async (id, data) => {
   try {
+    const updatedBoard = {
+      ...data
+    }
+    if (data.boardId) {
+      updatedBoard.boardId = ObjectId(data.boardId)
+    }
+    if (data.columnId) {
+      updatedBoard.columnId = ObjectId(data.columnId)
+    }
     const result = await getDB()
       .collection(cardCollectionName)
       .findOneAndUpdate(
         { _id: ObjectId(id) },
-        { $set: data },
+        { $set: updatedBoard },
         { returnDocument: 'after' }
       )
     return result.value

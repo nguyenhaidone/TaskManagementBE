@@ -26,6 +26,7 @@ const getFullBoard = async (id) => {
         (c) => c.columnId.toString() === col._id.toString()
       )
     })
+    console.log(tranformBoard)
     delete tranformBoard.cards
 
     return tranformBoard
@@ -34,4 +35,16 @@ const getFullBoard = async (id) => {
   }
 }
 
-export const BoardServices = { createNew, getFullBoard }
+const update = async (id, data) => {
+  try {
+    const updateData = { ...data, updatedAt: Date.now() }
+    if (updateData._id) delete updateData._id
+    if (updateData.cards) delete updateData.cards
+    const result = await BoardModel.update(id, updateData)
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+export const BoardServices = { createNew, getFullBoard, update }

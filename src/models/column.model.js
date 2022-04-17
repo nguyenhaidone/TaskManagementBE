@@ -60,8 +60,10 @@ const createNew = async (data) => {
 const update = async (id, data) => {
   try {
     const updatedBoard = {
-      ...data,
-      boardId: ObjectId(data.boardId)
+      ...data
+    }
+    if (data.boardId) {
+      updatedBoard.boardId = ObjectId(data.boardId)
     }
     const result = await getDB()
       .collection(columnCollectionName)
@@ -70,7 +72,9 @@ const update = async (id, data) => {
         { $set: updatedBoard },
         { returnDocument: 'after' }
       )
+    // console.log(data)
     if (result.value._destroy) {
+      // console.log('des')
       CardModel.updateCards(result.value.cardOrder)
     }
     return result.value
