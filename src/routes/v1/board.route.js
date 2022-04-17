@@ -13,6 +13,9 @@ router
     BoardController.createNew
   )
 
-router.route('/:id').get(AuthMiddleware.isAuth, BoardController.getFullBoard)
+router
+  .route('/:id')
+  .get(BoardController.getFullBoard)
+  .put(BoardController.update)
 
 export const boardRoute = router
