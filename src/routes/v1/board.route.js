@@ -15,7 +15,7 @@ router
 
 router
   .route('/:id')
-  .get(BoardController.getFullBoard)
-  .put(BoardController.update)
+  .get(AuthMiddleware.isAuth, BoardController.getFullBoard)
+  .put(AuthMiddleware.isAuth, BoardController.update)
 
 export const boardRoute = router

@@ -19,7 +19,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    console.log(req.body)
+    // console.log(req.body);
     const loginDto = authDto.loginDto(req.body)
     const result = await AuthServices.loginAccount(loginDto)
     res
@@ -35,7 +35,7 @@ const login = async (req, res) => {
 
 const socialLogin = async (req, res) => {
   try {
-    console.log(req.body)
+    // console.log(req.body);
     const socialLoginDto = authDto.registerDto(req.body)
     const result = await AuthServices.socialLoginService(socialLoginDto)
     res
@@ -43,6 +43,27 @@ const socialLogin = async (req, res) => {
       .json(responseMessage(httpStatusCode.OK, result))
   } catch (error) {
     console.log(error)
+    res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
+const userDetail = async (req, res) => {
+  try {
+    // const userEmail = req.params.email;
+    const { email } = await req.params
+    const accessTokenFromHeader = req.headers.x_authorization
+    // console.log(email);
+    const result = await AuthServices.getUserDetailService(
+      email,
+      accessTokenFromHeader
+    )
+    // console.log(result);
+    res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
     res
       .status(httpStatusCode.INTERNAL_SERVER_ERROR)
       .send({ error: error.message })
@@ -75,4 +96,10 @@ const refreshToken = async (req, res) => {
   }
 }
 
-export const AuthController = { register, login, refreshToken, socialLogin }
+export const AuthController = {
+  register,
+  login,
+  refreshToken,
+  socialLogin,
+  userDetail
+}
