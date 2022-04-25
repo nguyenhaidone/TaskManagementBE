@@ -28,4 +28,21 @@ const loginDto = (data) => {
   return dataMapping
 }
 
-export const authDto = { registerDto, loginDto }
+const userDetailConvert = (data) => {
+  const dataMapping = {
+    email: data.email,
+    fullname: data.fullname,
+    address:data.address,
+    phoneNumber: data.phoneNumber,
+    avatar:data.avatar,
+    dateOfBirth: data.dateOfBirth,
+    plan: data.plan,
+    permission: data.permission,
+    metadata: data.metadata,
+    private_metadata: data.private_metadata,
+    isActive: true
+  }
+  return dataMapping
+}
+
+export const authDto = { registerDto, loginDto, userDetailConvert }

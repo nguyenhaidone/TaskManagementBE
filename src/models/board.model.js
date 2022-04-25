@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
+import { UserModel } from '*/models/user.model'
 import { getDB } from '*/config/configuration'
 
 /**
@@ -13,7 +14,18 @@ const boardCollectionSchema = Joi.object({
   columnOrder: Joi.array().items(Joi.string()).default([]),
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null),
-  _destroy: Joi.boolean().default(false)
+  _destroy: Joi.boolean().default(false),
+  creater: Joi.string(),
+  members: Joi.array().default([]),
+  boardBackgroundColor: Joi.string().default('#ffffff'),
+  metadata: Joi.object({
+    key: Joi.string().optional().allow(''),
+    value: Joi.string().optional().allow('')
+  }),
+  private_metadata: Joi.object({
+    key: Joi.string().optional().allow(''),
+    value: Joi.string().optional().allow('')
+  })
 })
 
 /**
@@ -32,13 +44,23 @@ const ValidateSchema = async (data) => {
 const createNew = async (data) => {
   try {
     const value = await ValidateSchema(data)
-    const result = await getDB()
-      .collection(boardCollectionName)
-      .insertOne(value)
-    const getResult = await getDB()
-      .collection(boardCollectionName)
-      .findOne({ _id: result.insertedId })
-    return getResult
+    // console.log(data);
+    const validUser = await UserModel.getCurrentUser(data.email)
+    if (validUser) {
+      const insertValue = {
+        ...value,
+        creater: ObjectId(validUser._id)
+      }
+      // console.log(insertValue);
+      const result = await getDB()
+        .collection(boardCollectionName)
+        .insertOne(insertValue)
+      const getResult = await getDB()
+        .collection(boardCollectionName)
+        .findOne({ _id: result.insertedId })
+      return getResult
+    }
+    return 'User not exist'
   } catch (error) {
     throw new Error(error)
   }

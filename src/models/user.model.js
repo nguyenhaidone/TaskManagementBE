@@ -215,6 +215,7 @@ const getCurrentUser = async (email) => {
     const user = await getDB()
       .collection(userCollectionName)
       .findOne({ email: email })
+    // console.log(user);
     return user
     // }
 
