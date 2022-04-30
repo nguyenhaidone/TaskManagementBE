@@ -45,7 +45,7 @@ const createNew = async (data) => {
   try {
     const value = await ValidateSchema(data)
     // console.log(data);
-    const validUser = await UserModel.getCurrentUser(data.email)
+    const validUser = await UserModel.getCurrentUser(data.creater)
     if (validUser) {
       const insertValue = {
         ...value,
@@ -59,8 +59,7 @@ const createNew = async (data) => {
         .collection(boardCollectionName)
         .findOne({ _id: result.insertedId })
       return getResult
-    }
-    return 'User not exist'
+    } else return 'User not exist'
   } catch (error) {
     throw new Error(error)
   }

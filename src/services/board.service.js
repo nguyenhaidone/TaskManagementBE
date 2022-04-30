@@ -26,7 +26,7 @@ const getFullBoard = async (id) => {
         (c) => c.columnId.toString() === col._id.toString()
       )
     })
-    console.log(tranformBoard)
+    // console.log(tranformBoard)
     delete tranformBoard.cards
 
     return tranformBoard
