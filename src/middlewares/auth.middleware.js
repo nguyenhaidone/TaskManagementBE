@@ -20,7 +20,6 @@ const isAuth = async (req, res, next) => {
 
   const user = await UserModel.getCurrentUser(verified.payload.email)
   req.user = user
-
   return next()
 }
 

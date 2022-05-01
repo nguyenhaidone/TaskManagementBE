@@ -2,6 +2,8 @@ import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { UserModel } from '*/models/user.model'
 import { getDB } from '*/config/configuration'
+import { genToken } from '*/utils/generationToken'
+import { env } from '*/config/environment'
 
 /**
  * !Define board collections
@@ -146,10 +148,39 @@ const update = async (id, data) => {
   }
 }
 
+/**
+ * !API get list board by user id
+ * @param {string} id
+ * @returns {*} result
+ */
+const getListBoardByUser = async (accessTokenFromHeader) => {
+  try {
+    const decoded = await genToken.decodeToken(
+      accessTokenFromHeader,
+      env.ACCESS_TOKEN_SECRET
+    )
+    if (!decoded) {
+      throw 'Access token invaild.'
+    }
+    const email = decoded.payload.email
+    const validUser = await UserModel.getCurrentUser(email)
+    if (validUser) {
+      const result = await getDB()
+        .collection(boardCollectionName)
+        .find({ creater: validUser._id })
+        .toArray()
+      return result
+    } else return 'User not exist'
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const BoardModel = {
   boardCollectionName,
   createNew,
   getFullBoard,
   pushColumnOrder,
-  update
+  update,
+  getListBoardByUser
 }

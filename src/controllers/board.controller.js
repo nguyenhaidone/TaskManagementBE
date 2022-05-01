@@ -43,4 +43,28 @@ const update = async (req, res) => {
   }
 }
 
-export const BoardController = { createNew, getFullBoard, update }
+const getListBoardByUserIdController = async (req, res) => {
+  try {
+    const accessTokenFromHeader = req.headers.x_authorization
+    if (!accessTokenFromHeader) {
+      return res.status(400).send('Access token not exist.')
+    }
+    const result = await BoardServices.getListBoardByUserIdService(
+      accessTokenFromHeader
+    )
+    res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
+    res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
+export const BoardController = {
+  createNew,
+  getFullBoard,
+  update,
+  getListBoardByUserIdController
+}

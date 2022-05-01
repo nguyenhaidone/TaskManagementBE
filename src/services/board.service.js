@@ -47,4 +47,18 @@ const update = async (id, data) => {
   }
 }
 
-export const BoardServices = { createNew, getFullBoard, update }
+const getListBoardByUserIdService = async (accessTokenFromHeader) => {
+  try {
+    const result = await BoardModel.getListBoardByUser(accessTokenFromHeader)
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+export const BoardServices = {
+  createNew,
+  getFullBoard,
+  update,
+  getListBoardByUserIdService
+}
