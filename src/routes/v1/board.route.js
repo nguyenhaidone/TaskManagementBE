@@ -7,6 +7,7 @@ const router = express.Router()
 
 router
   .route('/')
+  .get(AuthMiddleware.isAuth, BoardController.getListBoardByUserIdController)
   .post(
     AuthMiddleware.isAuth,
     BoardValidations.createNew,
