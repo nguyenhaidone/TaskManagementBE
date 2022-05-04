@@ -22,7 +22,7 @@ const bootServer = () => {
   /**
    * !use cors configuration
    */
-  app.use(cors(corsOptions))
+  // app.use(cors(corsOptions))
   /**
    * !Enable req.body data
    */

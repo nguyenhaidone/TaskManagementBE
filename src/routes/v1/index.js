@@ -4,6 +4,7 @@ import { boardRoute } from './board.route'
 import { columnRoute } from './column.route'
 import { cardRoute } from './card.route'
 import { authRoute } from './auth.route'
+import { orderRoute } from './order.route'
 
 const router = express.Router()
 
@@ -35,5 +36,10 @@ router.use('/cards', cardRoute)
  * !Register Apis
  */
 router.use('/auth', authRoute)
+
+/**
+ * !Order Apis
+ */
+router.use('/order', orderRoute)
 
 export const api = router
