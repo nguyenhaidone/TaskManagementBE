@@ -5,6 +5,8 @@ import { env } from '*/config/environment'
 import { getDB } from '*/config/configuration'
 import { hash } from '*/utils/hashPassword'
 import { genToken } from '*/utils/generationToken'
+import { emailType } from '*/mail/mail.type'
+import { transport } from '*/mail/mail.config'
 
 /**
  * !Define board collections
@@ -143,6 +145,7 @@ const loginAccount = async (data) => {
       // Nếu user này đã có refresh token thì lấy refresh token đó từ database
       refreshToken = findExistingAccount.refreshToken
     }
+
     return {
       message: 'Login successfully!',
       accessToken,
