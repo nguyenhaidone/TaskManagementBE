@@ -15,6 +15,8 @@ router.route('/social-login').post(AuthController.socialLogin)
 
 router.route('/refresh-token').post(AuthController.refreshToken)
 
+router.route('/verify-code').post(AuthController.sendVerifyCode)
+
 router
   .route('/user-detail/:email')
   .get(AuthMiddleware.isAuth, AuthController.userDetail)

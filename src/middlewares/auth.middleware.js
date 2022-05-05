@@ -19,6 +19,9 @@ const isAuth = async (req, res, next) => {
   }
 
   const user = await UserModel.getCurrentUser(verified.payload.email)
+  if (!user.isActive) {
+    return res.status(403).send('User has not verified yet!')
+  }
   req.user = user
   return next()
 }

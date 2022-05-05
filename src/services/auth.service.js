@@ -14,6 +14,16 @@ const registerNewAccount = async (data) => {
   }
 }
 
+const registerSocialAccount = async (data) => {
+  try {
+    data.password = hash.hashPassword(data.password)
+    const result = await UserModel.registerSocialAccount(data)
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 const loginAccount = async (data) => {
   try {
     // console.log(data);
@@ -69,9 +79,19 @@ const socialLoginService = async (data) => {
       const loginSocial = await loginAccount(data)
       return loginSocial
     } else {
-      const registerSocial = await registerNewAccount(data)
+      const registerSocial = await registerSocialAccount(data)
       return registerSocial
     }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+const sendVerifyCodeService = async (email, verifyCode) => {
+  try {
+    console.log(verifyCode)
+    const checkVerifyCode = await UserModel.checkVerifyCode(email, verifyCode)
+    return checkVerifyCode
   } catch (error) {
     throw new Error(error)
   }
@@ -82,5 +102,6 @@ export const AuthServices = {
   loginAccount,
   refreshToken,
   socialLoginService,
-  getUserDetailService
+  getUserDetailService,
+  sendVerifyCodeService
 }
