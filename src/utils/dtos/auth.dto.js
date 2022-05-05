@@ -14,7 +14,7 @@ const registerDto = (data) => {
     permission: data.permission || permission.normal_user,
     metadata: data.metadata || { key: '', value: '' },
     private_metadata: data.private_metadata || { key: '', value: '' },
-    isActive: data.isActive || true,
+    isActive: data.isActive || false,
     refreshToken: data.refreshToken || ''
   }
   return dataMapping

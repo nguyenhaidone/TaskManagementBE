@@ -7,6 +7,7 @@ import { hash } from '*/utils/hashPassword'
 import { genToken } from '*/utils/generationToken'
 import { emailType } from '*/mail/mail.type'
 import { transport } from '*/mail/mail.config'
+import { genVerifyCode } from '*/utils/genVerifyCode'
 
 /**
  * !Define board collections
@@ -36,6 +37,7 @@ const userCollectionSchema = Joi.object({
     value: Joi.string().optional().allow('')
   }),
   isActive: Joi.boolean(),
+  verifyCode: Joi.string().optional().allow(''),
   refreshToken: Joi.string().optional().allow('')
 })
 
@@ -57,12 +59,98 @@ const registerNewAccount = async (data) => {
     const findExistingAccount = await getDB()
       .collection(userCollectionName)
       .findOne({ email: data.email })
+    const verifyCode = await genVerifyCode()
+
     if (findExistingAccount) {
-      throw 'Account already exist!'
+      /**
+       * !Check account exist and verify
+       */
+      if (findExistingAccount.isActive) {
+        throw 'Account already exist!'
+      } else {
+        /**
+         * !Else not verify then update user and gen new verify code
+         */
+        const updateVerifyCode = await getDB()
+          .collection(userCollectionName)
+          .findOneAndUpdate(
+            { _id: findExistingAccount._id },
+            { $set: { verifyCode: verifyCode } },
+            { returnDocument: 'after' }
+          )
+        /**
+         * !Send mail to user get verify code
+         */
+        const configMailOption = transport.mailOptions(
+          findExistingAccount.email,
+          emailType.SendVerifyCode(verifyCode, findExistingAccount.fullname)
+        )
+        transport.transporter.sendMail(configMailOption, (err, data) => {
+          if (err) {
+            console.log(err)
+            throw err
+          } else {
+            console.log('Email sent')
+          }
+        })
+        return updateVerifyCode.value
+      }
     } else {
       const newAccount = await getDB()
         .collection(userCollectionName)
         .insertOne(data)
+      const getResult = await getDB()
+        .collection(userCollectionName)
+        .findOne({ _id: newAccount.insertedId })
+      const updateVerifyCode = await getDB()
+        .collection(userCollectionName)
+        .findOneAndUpdate(
+          { _id: newAccount.insertedId },
+          { $set: { verifyCode: verifyCode } },
+          { returnDocument: 'after' }
+        )
+      /**
+       * !Send mail to user get verify code
+       */
+      const configMailOption = transport.mailOptions(
+        getResult.email,
+        emailType.SendVerifyCode(verifyCode, getResult.fullname)
+      )
+      transport.transporter.sendMail(configMailOption, (err, data) => {
+        if (err) {
+          console.log(err)
+          throw err
+        } else {
+          console.log('Email sent')
+        }
+      })
+      return updateVerifyCode.value
+    }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+/**
+ * !API Register new account for social login
+ * @param {object} data
+ * @returns {*} result
+ */
+const registerSocialAccount = async (data) => {
+  try {
+    const findExistingAccount = await getDB()
+      .collection(userCollectionName)
+      .findOne({ email: data.email })
+    if (findExistingAccount) {
+      throw 'Account already exist!'
+    } else {
+      const insertedData = {
+        ...data,
+        isActive: true
+      }
+      const newAccount = await getDB()
+        .collection(userCollectionName)
+        .insertOne(insertedData)
       const getResult = await getDB()
         .collection(userCollectionName)
         .findOne({ _id: newAccount.insertedId })
@@ -97,7 +185,7 @@ const updateRefreshToken = async (userId, refreshToken) => {
  * @param {object} data
  * @returns {*} result
  */
-const loginAccount = async (data) => {
+const loginAccount = async (data, isSocialLogin) => {
   try {
     const findExistingAccount = await getDB()
       .collection(userCollectionName)
@@ -107,6 +195,9 @@ const loginAccount = async (data) => {
      */
     if (!findExistingAccount) {
       return 'Account have not already exist!'
+    }
+    if (!findExistingAccount.isActive) {
+      return 'Account have not verify!'
     }
     const verifyPassword = hash.encryptPassword(
       data.password,
@@ -214,20 +305,41 @@ const refreshToken = async (accessTokenFromHeader, refreshTokenFromBody) => {
  */
 const getCurrentUser = async (email) => {
   try {
-    // if (email) {
     const user = await getDB()
       .collection(userCollectionName)
       .findOne({ email: email })
-    // console.log(user);
     return user
-    // }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
 
-    // if (phoneNumber) {
-    //   const user = await getDB()
-    //     .collection(userCollectionName)
-    //     .findOne({ phoneNumber: phoneNumber })
-    //   return user ? user : 'User not exist'
-    // }
+/**
+ * !API check verify code
+ * @param {object} data
+ * @returns {*} result
+ */
+const checkVerifyCode = async (email, verifyCode) => {
+  try {
+    const findExistingAccount = await getDB()
+      .collection(userCollectionName)
+      .findOne({ email: email })
+    if (!findExistingAccount) {
+      return 'User not found'
+    } else {
+      if (findExistingAccount.verifyCode.toString() === verifyCode) {
+        const updateVerifyCode = await getDB()
+          .collection(userCollectionName)
+          .findOneAndUpdate(
+            { _id: findExistingAccount._id },
+            { $set: { isActive: true } },
+            { returnDocument: 'after' }
+          )
+        return updateVerifyCode.value
+      } else {
+        return 'Wrong verifier code'
+      }
+    }
   } catch (error) {
     throw new Error(error)
   }
@@ -237,5 +349,7 @@ export const UserModel = {
   registerNewAccount,
   loginAccount,
   refreshToken,
-  getCurrentUser
+  getCurrentUser,
+  registerSocialAccount,
+  checkVerifyCode
 }

@@ -96,10 +96,26 @@ const refreshToken = async (req, res) => {
   }
 }
 
+const sendVerifyCode = async (req, res) => {
+  try {
+    const { email, verifyCode } = req.body
+    const result = await AuthServices.sendVerifyCodeService(email, verifyCode)
+    res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
+    console.log(error)
+    res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
 export const AuthController = {
   register,
   login,
   refreshToken,
   socialLogin,
-  userDetail
+  userDetail,
+  sendVerifyCode
 }
