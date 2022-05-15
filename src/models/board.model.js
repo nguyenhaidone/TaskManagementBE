@@ -23,11 +23,11 @@ const boardCollectionSchema = Joi.object({
   metadata: Joi.object({
     key: Joi.string().optional().allow(''),
     value: Joi.string().optional().allow('')
-  }),
+  }).default([{ key: '', value: '' }]),
   private_metadata: Joi.object({
     key: Joi.string().optional().allow(''),
     value: Joi.string().optional().allow('')
-  })
+  }).default([{ key: '', value: '' }])
 })
 
 /**

@@ -97,11 +97,27 @@ const sendVerifyCodeService = async (email, verifyCode) => {
   }
 }
 
+const updateUserInfoService = async (curUser, data) => {
+  try {
+    console.log(curUser)
+    console.log(data)
+    if (curUser) {
+      const userInfoUpdate = await UserModel.updateInfoUser(curUser, data)
+      return userInfoUpdate
+    } else {
+      return 'User not found'
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const AuthServices = {
   registerNewAccount,
   loginAccount,
   refreshToken,
   socialLoginService,
   getUserDetailService,
-  sendVerifyCodeService
+  sendVerifyCodeService,
+  updateUserInfoService
 }
