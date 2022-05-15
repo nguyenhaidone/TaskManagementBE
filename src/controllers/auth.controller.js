@@ -111,11 +111,30 @@ const sendVerifyCode = async (req, res) => {
   }
 }
 
+const updateUserInformation = async (req, res) => {
+  try {
+    console.log(req.user)
+    console.log(req.body)
+    const curUser = req.user
+    const data = req.body
+    const result = await AuthServices.updateUserInfoService(curUser, data)
+    res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
+    console.log(error)
+    res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
 export const AuthController = {
   register,
   login,
   refreshToken,
   socialLogin,
   userDetail,
-  sendVerifyCode
+  sendVerifyCode,
+  updateUserInformation
 }

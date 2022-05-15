@@ -6,6 +6,7 @@ import { genToken } from '*/utils/generationToken'
 import { env } from '*/config/environment'
 import { emailType } from '*/mail/mail.type'
 import { transport } from '*/mail/mail.config'
+import { plan } from '*/utils/constants'
 
 /**
  * !Define order collections
@@ -62,6 +63,12 @@ const createNew = async (data, user) => {
     const result = await getDB()
       .collection(orderCollectionName)
       .insertOne(insertValue)
+    await getDB()
+      .collection(UserModel.userCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(user._id) },
+        { $set: { extensionDate: data.createdOrderAt, plan: plan.premium } }
+      )
     const getResult = await getDB()
       .collection(orderCollectionName)
       .findOne({ _id: result.insertedId })

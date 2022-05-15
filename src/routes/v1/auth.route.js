@@ -18,6 +18,10 @@ router.route('/refresh-token').post(AuthController.refreshToken)
 router.route('/verify-code').post(AuthController.sendVerifyCode)
 
 router
+  .route('/update-user-info')
+  .put(AuthMiddleware.isAuth, AuthController.updateUserInformation)
+
+router
   .route('/user-detail/:email')
   .get(AuthMiddleware.isAuth, AuthController.userDetail)
 

@@ -28,6 +28,7 @@ const userCollectionSchema = Joi.object({
   createdAt: Joi.date().timestamp().default(Date.now()),
   plan: Joi.string(),
   permission: Joi.string(),
+  profession: Joi.string().optional().allow(''),
   metadata: Joi.object({
     key: Joi.string().optional().allow(''),
     value: Joi.string().optional().allow('')
@@ -38,7 +39,8 @@ const userCollectionSchema = Joi.object({
   }),
   isActive: Joi.boolean(),
   verifyCode: Joi.string().optional().allow(''),
-  refreshToken: Joi.string().optional().allow('')
+  refreshToken: Joi.string().optional().allow(''),
+  extensionDate: Joi.date().optional().default(Date.now('01/01/1900'))
 })
 
 /**
@@ -345,11 +347,34 @@ const checkVerifyCode = async (email, verifyCode) => {
   }
 }
 
+/**
+ * !API update info user
+ * @param {object} data
+ * @returns {*} result
+ */
+const updateInfoUser = async (curUser, data) => {
+  try {
+    const infoUserNeedUpdate = { ...data }
+    const result = await getDB()
+      .collection(userCollectionName)
+      .findOneAndUpdate(
+        { _id: curUser._id },
+        { $set: infoUserNeedUpdate },
+        { returnDocument: 'after' }
+      )
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const UserModel = {
   registerNewAccount,
   loginAccount,
   refreshToken,
   getCurrentUser,
   registerSocialAccount,
-  checkVerifyCode
+  checkVerifyCode,
+  updateInfoUser,
+  userCollectionName
 }
