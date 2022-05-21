@@ -9,7 +9,7 @@ import { getDB } from '*/config/configuration'
 const cardCollectionName = 'cards'
 
 const cardCollectionSchema = Joi.object({
-  title: Joi.string().required().min(2).max(20).trim(),
+  title: Joi.string().required().min(2).trim(),
   boardId: Joi.string().required(),
   columnId: Joi.string().required(),
   createdAt: Joi.date().timestamp().default(Date.now()),
