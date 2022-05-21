@@ -56,9 +56,36 @@ const getListBoardByUserIdService = async (accessTokenFromHeader) => {
   }
 }
 
+const addNewPeopleService = async (user, data) => {
+  try {
+    const { boardId, userEmail } = data
+    console.log(userEmail)
+    console.log(boardId)
+    const [result] = await BoardModel.getFullBoard(boardId)
+    if (result) {
+      const emailExist = result.members.find((email) => email === userEmail)
+      if (emailExist) {
+        return 'user already exists'
+      } else {
+        const addNewMembers = await BoardModel.pushMember(
+          user,
+          boardId,
+          userEmail
+        )
+        return addNewMembers
+      }
+    } else {
+      return 'Board not exist'
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const BoardServices = {
   createNew,
   getFullBoard,
   update,
-  getListBoardByUserIdService
+  getListBoardByUserIdService,
+  addNewPeopleService
 }

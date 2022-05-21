@@ -13,5 +13,6 @@ export const env = {
   REFRESH_TOKEN_SIZE: process.env.REFRESH_TOKEN_SIZE,
   EMAIL: process.env.EMAIL,
   PASSWORD: process.env.PASSWORD,
-  SERVICE_NAME: process.env.SERVICE_NAME
+  SERVICE_NAME: process.env.SERVICE_NAME,
+  LOCAL: process.env.LOCAL
 }
