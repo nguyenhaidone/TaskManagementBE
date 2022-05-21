@@ -1,9 +1,12 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { UserModel } from '*/models/user.model'
+import { CardModel } from '*/models/card.model'
 import { getDB } from '*/config/configuration'
 import { genToken } from '*/utils/generationToken'
 import { env } from '*/config/environment'
+import { emailType } from '*/mail/mail.type'
+import { transport } from '*/mail/mail.config'
 
 /**
  * !Define board collections
@@ -139,9 +142,9 @@ const update = async (id, data) => {
         { $set: updatedBoard },
         { returnDocument: 'after' }
       )
-    // if (result.value._destroy) {
-    //   CardModel.updateCards(result.value.cardOrder)
-    // }
+    if (result.value._destroy) {
+      CardModel.updateCards(result.value.cardOrder)
+    }
     return result.value
   } catch (error) {
     throw new Error(error)
@@ -176,11 +179,56 @@ const getListBoardByUser = async (accessTokenFromHeader) => {
   }
 }
 
+/**
+ * !API Update member
+ * @param {string} boardId
+ * @param {string} columnId
+ * @returns {*} result
+ */
+const pushMember = async (curUser, boardId, userEmail) => {
+  try {
+    const result = await getDB()
+      .collection(boardCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(boardId) },
+        { $push: { members: userEmail } },
+        { returnDocument: 'after' }
+      )
+    // if (result.value) {
+    /**
+     * !Send mail
+     */
+    const navigationBoard = `${env.LOCAL}board/${boardId}`
+    const configMailOption = transport.mailOptions(
+      userEmail,
+      emailType.INVITATION_JOIN_US(
+        curUser.email,
+        result.value.title,
+        userEmail,
+        navigationBoard
+      )
+    )
+    transport.transporter.sendMail(configMailOption, (err, data) => {
+      if (err) {
+        console.log(err)
+        throw err
+      } else {
+        console.log('Email sent')
+      }
+    })
+    // }
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const BoardModel = {
   boardCollectionName,
   createNew,
   getFullBoard,
   pushColumnOrder,
   update,
-  getListBoardByUser
+  getListBoardByUser,
+  pushMember
 }

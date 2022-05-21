@@ -62,9 +62,27 @@ const getListBoardByUserIdController = async (req, res) => {
   }
 }
 
+const addNewPeopleController = async (req, res) => {
+  try {
+    const boardId = req.params
+    const email = req.body.email
+    const data = { userEmail: email, boardId: boardId.id }
+    const user = req.user
+    const result = await BoardServices.addNewPeopleService(user, data)
+    res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
+    res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
 export const BoardController = {
   createNew,
   getFullBoard,
   update,
-  getListBoardByUserIdController
+  getListBoardByUserIdController,
+  addNewPeopleController
 }
