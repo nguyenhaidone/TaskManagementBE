@@ -32,15 +32,17 @@ const userDetailConvert = (data) => {
   const dataMapping = {
     email: data.email,
     fullname: data.fullname,
-    address:data.address,
+    address: data.address,
     phoneNumber: data.phoneNumber,
-    avatar:data.avatar,
+    avatar: data.avatar,
     dateOfBirth: data.dateOfBirth,
     plan: data.plan,
     permission: data.permission,
     metadata: data.metadata,
     private_metadata: data.private_metadata,
-    isActive: true
+    isActive: true,
+    profession: data.profession,
+    extensionDate: data.extensionDate
   }
   return dataMapping
 }
