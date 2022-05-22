@@ -3,7 +3,7 @@ import { httpStatusCode } from '*/utils/constants'
 
 const createNew = async (req, res, next) => {
   const conditions = Joi.object({
-    title: Joi.string().required().min(1).max(20),
+    title: Joi.string().required().min(1),
     creater: Joi.string().min(1),
     boardBackgroundColor: Joi.string().min(1)
   })
