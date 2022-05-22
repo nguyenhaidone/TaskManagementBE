@@ -7,12 +7,13 @@ const isAccessBoard = async (req, res, next) => {
   if (!result || result._destroy) {
     return res.status(404).send('Board not found!')
   }
-  if (result.creater !== user._id) {
+  if (!result.creater.equals(user._id)) {
     console.log(result.creater)
     console.log(user._id)
+    // console.log();
     const isMember = result.members.find((email) => email === user.email)
     if (!isMember) {
-      return res.status(401).send('You do not have permission to access!')
+      return res.status(401).send('You do not have permission to access this board!')
     }
     return next()
   } else {
