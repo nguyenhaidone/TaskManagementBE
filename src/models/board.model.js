@@ -223,6 +223,28 @@ const pushMember = async (curUser, boardId, userEmail) => {
   }
 }
 
+/**
+ * !API Update member
+ * @param {string} boardId
+ * @param {string} columnId
+ * @returns {*} result
+ */
+const getListBoardJoinedOfCurrentUser = async (user) =>{
+  try {
+    const curUserEmail = user.email;
+    const result = await getDB()
+      .collection(boardCollectionName)
+      .find({
+        members: curUserEmail
+      })
+      .toArray()
+    console.log(result);
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const BoardModel = {
   boardCollectionName,
   createNew,
@@ -230,5 +252,6 @@ export const BoardModel = {
   pushColumnOrder,
   update,
   getListBoardByUser,
-  pushMember
+  pushMember,
+  getListBoardJoinedOfCurrentUser
 }

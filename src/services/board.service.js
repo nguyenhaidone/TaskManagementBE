@@ -82,10 +82,21 @@ const addNewPeopleService = async (user, data) => {
   }
 }
 
+const listBoardJoinedByCurrentUserService = async (user) => {
+  try {
+    console.log(user);
+    const result = await BoardModel.getListBoardJoinedOfCurrentUser(user)
+    return result
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const BoardServices = {
   createNew,
   getFullBoard,
   update,
   getListBoardByUserIdService,
-  addNewPeopleService
+  addNewPeopleService,
+  listBoardJoinedByCurrentUserService
 }
