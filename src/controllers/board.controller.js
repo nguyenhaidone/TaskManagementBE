@@ -79,10 +79,25 @@ const addNewPeopleController = async (req, res) => {
   }
 }
 
+const getListBoardJoinedOfCurrentUserController = async (req, res) => { 
+  try {
+    const curUser = req.user
+    const result = await BoardServices.listBoardJoinedByCurrentUserService(curUser)
+    res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
+    res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
 export const BoardController = {
   createNew,
   getFullBoard,
   update,
   getListBoardByUserIdController,
-  addNewPeopleController
+  addNewPeopleController,
+  getListBoardJoinedOfCurrentUserController
 }

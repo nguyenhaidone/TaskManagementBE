@@ -7,7 +7,7 @@ const isAccessBoard = async (req, res, next) => {
   if (!result || result._destroy) {
     return res.status(404).send('Board not found!')
   }
-  if (!result.creater.equals(user._id)) {
+  if (!result.creater == user._id) {
     console.log(result.creater)
     console.log(user._id)
     // console.log();
