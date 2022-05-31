@@ -3,7 +3,7 @@ require('dotenv').config()
 export const env = {
   MONGO_URI: process.env.MONGO_URI,
   HOSTNAME: process.env.APP_HOSTNAME,
-  PORT: process.env.APP_PORT,
+  APP_PORT: process.env.APP_PORT,
   DATABASE_NAME: process.env.DATABASE_NAME,
   SALT_ROUNDS: process.env.SALT_ROUNDS,
   PLAIN_TEXT_PASSWORD: process.env.PLAIN_TEXT_PASSWORD,

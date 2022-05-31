@@ -43,7 +43,7 @@ export const getDB = () => {
 /**
  * !Configuring CORS w/ Dynamic Origin
  */
-const WHITELIST = ['http://localhost:3001', 'http://localhost:3000', 'https://629379c038e34200090d3fee--majestic-baklava-f2f5d8.netlify.app']
+const WHITELIST = ['http://localhost:3000', 'https://629379c038e34200090d3fee--majestic-baklava-f2f5d8.netlify.app']
 
 export const corsOptions = {
   origin: function (origin, callback) {
