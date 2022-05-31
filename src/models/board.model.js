@@ -229,16 +229,16 @@ const pushMember = async (curUser, boardId, userEmail) => {
  * @param {string} columnId
  * @returns {*} result
  */
-const getListBoardJoinedOfCurrentUser = async (user) =>{
+const getListBoardJoinedOfCurrentUser = async (user) => {
   try {
-    const curUserEmail = user.email;
+    const curUserEmail = user.email
     const result = await getDB()
       .collection(boardCollectionName)
       .find({
         members: curUserEmail
       })
       .toArray()
-    console.log(result);
+    console.log(result)
     return result
   } catch (error) {
     throw new Error(error)

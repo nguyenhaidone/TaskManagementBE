@@ -37,7 +37,7 @@ const bootServer = () => {
   app.use(cronStart)
 
   app.listen(process.env.PORT, () => {
-    console.log('Start successfully, listening on port ' + process.env.POR)
+    console.log('Start successfully, listening on port ' + process.env.PORT)
   })
   // app.listen(env.PORT, env.HOSTNAME, () => {
   //   console.log('Start successfully, listening on port ' + env.PORT)
