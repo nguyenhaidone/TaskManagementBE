@@ -79,7 +79,7 @@ const addNewPeopleController = async (req, res) => {
   }
 }
 
-const getListBoardJoinedOfCurrentUserController = async (req, res) => { 
+const getListBoardJoinedOfCurrentUserController = async (req, res) => {
   try {
     const curUser = req.user
     const result = await BoardServices.listBoardJoinedByCurrentUserService(curUser)
