@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import { connectDB, corsOptions } from '*/config/configuration'
-import { env } from '*/config/environment'
+// import { env } from '*/config/environment'
 import { api } from '*/routes/v1'
 import { cronStart } from '*/utils/cronJob'
 
@@ -36,7 +36,10 @@ const bootServer = () => {
    */
   app.use(cronStart)
 
-  app.listen(env.PORT, env.HOSTNAME, () => {
-    console.log('Start successfully, listening on port ' + env.PORT)
+  app.listen(process.env.PORT, () => {
+    console.log('Start successfully, listening on port ' + process.env.POR)
   })
+  // app.listen(env.PORT, env.HOSTNAME, () => {
+  //   console.log('Start successfully, listening on port ' + env.PORT)
+  // })
 }
