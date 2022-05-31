@@ -15,6 +15,7 @@ const isAccessBoard = async (req, res, next) => {
     if (!isMember) {
       return res.status(401).send('You do not have permission to access this board!')
     }
+    req.board = result
     return next()
   } else {
     return next()
