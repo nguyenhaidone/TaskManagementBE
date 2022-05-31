@@ -32,6 +32,7 @@ const bootServer = () => {
     );
     next();
   });
+  app.use(cors(corsOptions));
   /**
    * !Enable req.body data
    */
