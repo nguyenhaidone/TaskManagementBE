@@ -20,6 +20,15 @@ const boardCollectionSchema = Joi.object({
   createdAt: Joi.date().timestamp().default(Date.now()),
   updatedAt: Joi.date().timestamp().default(null),
   _destroy: Joi.boolean().default(false),
+  message: Joi.array().items(Joi.object({
+    messageInfo: Joi.string().optional().allow(''),
+    timestamp: Joi.string().optional().allow(''),
+    username: Joi.string().optional().allow(''),
+    member: Joi.string().optional().allow(''),
+    column: Joi.string().optional().allow(''),
+    board: Joi.string().optional().allow(''),
+    card: Joi.string().optional().allow('')
+  })).default([]),
   creater: Joi.string(),
   members: Joi.array().default([]),
   boardBackgroundColor: Joi.string().default('#ffffff'),
@@ -170,7 +179,7 @@ const getListBoardByUser = async (accessTokenFromHeader) => {
     if (validUser) {
       const result = await getDB()
         .collection(boardCollectionName)
-        .find({ creater: validUser._id })
+        .find({ creater: validUser._id, _destroy: false })
         .toArray()
       return result
     } else return 'User not exist'
@@ -245,6 +254,27 @@ const getListBoardJoinedOfCurrentUser = async (user) => {
   }
 }
 
+/**
+ * !API Update board message
+ * @param {string} boardId
+ * @param {string} columnId
+ * @returns {*} result
+ */
+const updateBoardMessage = async (boardId, message) => {
+  try {
+    const boardNeedUpdate = await getDB()
+      .collection(boardCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(boardId) },
+        { $push: { message: message } },
+        { returnDocument: 'after' }
+      )
+    return boardNeedUpdate.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const BoardModel = {
   boardCollectionName,
   createNew,
@@ -253,5 +283,6 @@ export const BoardModel = {
   update,
   getListBoardByUser,
   pushMember,
-  getListBoardJoinedOfCurrentUser
+  getListBoardJoinedOfCurrentUser,
+  updateBoardMessage
 }

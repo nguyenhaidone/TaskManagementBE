@@ -43,4 +43,12 @@ router
     BoardController.addNewPeopleController
   )
 
+router
+  .route('/message/:id')
+  .put(
+    AuthMiddleware.isAuth,
+    BoardMiddleware.isAccessBoard,
+    BoardController.boardMessageController
+  )
+
 export const boardRoute = router
