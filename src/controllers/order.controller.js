@@ -16,4 +16,18 @@ const createNewOrderController = async (req, res) => {
   }
 }
 
-export const OrderController = { createNewOrderController }
+const listOrderController = async (req, res) => {
+  try {
+    const result = await OrderService.listOrderService(req.user)
+    console.log(result)
+    return res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
+    return res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
+export const OrderController = { createNewOrderController, listOrderController }
