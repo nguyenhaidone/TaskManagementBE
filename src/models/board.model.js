@@ -247,6 +247,7 @@ const getListBoardJoinedOfCurrentUser = async (user) => {
         members: curUserEmail
       })
       .toArray()
+    console.log(result)
     return result
   } catch (error) {
     throw new Error(error)
