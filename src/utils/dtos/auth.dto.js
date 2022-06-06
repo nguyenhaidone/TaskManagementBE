@@ -30,6 +30,7 @@ const loginDto = (data) => {
 
 const userDetailConvert = (data) => {
   const dataMapping = {
+    _id: data._id,
     email: data.email,
     fullname: data.fullname,
     address: data.address,
