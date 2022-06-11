@@ -3,6 +3,8 @@ import hbs from 'nodemailer-express-handlebars'
 import { env } from '*/config/environment'
 
 const transporter = nodemailer.createTransport({
+  port: 465,
+  secure: true,
   service: env.SERVICE_NAME,
   auth: {
     user: env.EMAIL,
