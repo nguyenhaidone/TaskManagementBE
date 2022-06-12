@@ -207,6 +207,7 @@ const pushMember = async (curUser, boardId, userEmail) => {
         { $push: { members: userEmail } },
         { returnDocument: 'after' }
       )
+    console.log(result.value)
     // if (result.value) {
     /**
      * !Send mail
@@ -232,6 +233,7 @@ const pushMember = async (curUser, boardId, userEmail) => {
     // }
     return result.value
   } catch (error) {
+    console.log(error)
     throw new Error(error)
   }
 }
