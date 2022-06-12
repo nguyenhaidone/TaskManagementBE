@@ -20,7 +20,7 @@ transporter.use(
 
 const mailOptions = (email, typeEmail) => {
   const option = {
-    from: 'davinci682000@gmail.com',
+    from: 'noreply.kanbanteam@gmail.com',
     to: email,
     html: typeEmail.html,
     subject: typeEmail.subject
