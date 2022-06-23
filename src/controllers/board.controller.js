@@ -148,6 +148,40 @@ export const removeMemberUserByCreateController = async (req, res) => {
   }
 }
 
+const addNewPeopleToBlackListController = async (req, res) => {
+  try {
+    const boardId = req.params
+    const email = req.body.email
+    const data = { userEmail: email, boardId: boardId.id }
+    const result = await BoardServices.addNewPeopleToBlackListService(data)
+    console.log(result)
+    res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
+    res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
+const removePeopleFromBlackListController = async (req, res) => {
+  try {
+    const boardId = req.params
+    const email = req.body.email
+    const data = { userEmail: email, boardId: boardId.id }
+    const result = await BoardServices.removePeopleFromBlackListService(data)
+    console.log(result)
+    res
+      .status(httpStatusCode.OK)
+      .json(responseMessage(httpStatusCode.OK, result))
+  } catch (error) {
+    res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message })
+  }
+}
+
 export const BoardController = {
   createNew,
   getFullBoard,
@@ -157,5 +191,7 @@ export const BoardController = {
   getListBoardJoinedOfCurrentUserController,
   boardMessageController,
   removeCurrentUserController,
-  removeMemberUserByCreateController
+  removeMemberUserByCreateController,
+  addNewPeopleToBlackListController,
+  removePeopleFromBlackListController
 }
