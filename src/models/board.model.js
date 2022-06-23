@@ -35,6 +35,7 @@ const boardCollectionSchema = Joi.object({
     .default([]),
   creater: Joi.string(),
   members: Joi.array().default([]),
+  blackList: Joi.array().default([]),
   boardBackgroundColor: Joi.string().default('#ffffff'),
   metadata: Joi.object({
     key: Joi.string().optional().allow(''),
@@ -320,6 +321,48 @@ const removeMemberUserByCreate = async (boardId, user, emailMember) => {
   }
 }
 
+/**
+ * !API disable member
+ * @param {string} boardId
+ * @param {string} columnId
+ * @returns {*} result
+ */
+const disableMember = async (boardId, userEmail) => {
+  try {
+    const result = await getDB()
+      .collection(boardCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(boardId) },
+        { $push: { blackList: userEmail } },
+        { returnDocument: 'after' }
+      )
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+/**
+ * !API disable member
+ * @param {string} boardId
+ * @param {string} columnId
+ * @returns {*} result
+ */
+const enableMember = async (boardId, userEmail) => {
+  try {
+    const result = await getDB()
+      .collection(boardCollectionName)
+      .findOneAndUpdate(
+        { _id: ObjectId(boardId) },
+        { $pull: { blackList: userEmail } },
+        { returnDocument: 'after' }
+      )
+    return result.value
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const BoardModel = {
   boardCollectionName,
   createNew,
@@ -331,5 +374,7 @@ export const BoardModel = {
   getListBoardJoinedOfCurrentUser,
   updateBoardMessage,
   removeCurrentUser,
-  removeMemberUserByCreate
+  removeMemberUserByCreate,
+  disableMember,
+  enableMember
 }

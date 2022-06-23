@@ -39,6 +39,7 @@ const update = async (id, data) => {
   try {
     const updateData = { ...data, updatedAt: Date.now() }
     if (updateData._id) delete updateData._id
+    if (updateData.creater) delete updateData.creater
     if (updateData.cards) delete updateData.cards
     const result = await BoardModel.update(id, updateData)
     return result
@@ -124,6 +125,57 @@ const removeMemberUserByCreateService = async (boardId, user, emailMember) => {
   }
 }
 
+const addNewPeopleToBlackListService = async (data) => {
+  try {
+    const { boardId, userEmail } = data
+    console.log(userEmail)
+    console.log(boardId)
+    const [result] = await BoardModel.getFullBoard(boardId)
+    console.log(result)
+    if (result) {
+      const emailExist = result.blackList.find((email) => email === userEmail)
+      if (emailExist) {
+        return 'user already exists'
+      } else {
+        const addNewMembers = await BoardModel.disableMember(
+          boardId,
+          userEmail
+        )
+        return addNewMembers
+      }
+    } else {
+      return 'Board not exist'
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const removePeopleFromBlackListService = async (data) => {
+  try {
+    const { boardId, userEmail } = data
+    console.log(userEmail)
+    console.log(boardId)
+    const [result] = await BoardModel.getFullBoard(boardId)
+    if (result) {
+      const emailExist = result.blackList.find((email) => email === userEmail)
+      if (!emailExist) {
+        return 'user not exists'
+      } else {
+        const removeMembersFromBlackList = await BoardModel.enableMember(
+          boardId,
+          userEmail
+        )
+        return removeMembersFromBlackList
+      }
+    } else {
+      return 'Board not exist'
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const BoardServices = {
   createNew,
   getFullBoard,
@@ -133,5 +185,7 @@ export const BoardServices = {
   listBoardJoinedByCurrentUserService,
   boardMessageService,
   removeCurrentUserService,
-  removeMemberUserByCreateService
+  removeMemberUserByCreateService,
+  addNewPeopleToBlackListService,
+  removePeopleFromBlackListService
 }
