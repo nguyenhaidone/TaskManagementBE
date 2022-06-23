@@ -384,6 +384,7 @@ const cancelService = async () => {
           $gte: new Date()
         }
       })
+    console.log(getExpiredPlanUser)
     await getExpiredPlanUser.forEach((user) => {
       listExpiredPlanUser.push(user._id)
     })

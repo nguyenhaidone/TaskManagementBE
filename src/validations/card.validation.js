@@ -6,7 +6,11 @@ const createNew = async (req, res, next) => {
     title: Joi.string().required().min(1),
     boardId: Joi.string().required().min(3).trim(),
     columnId: Joi.string().required().min(3).trim(),
-    cover: Joi.string()
+    cover: Joi.string(),
+    creater: Joi.string(),
+    deadline: Joi.date(),
+    description: Joi.string(),
+    assignee: Joi.string()
   })
   try {
     await conditions.validateAsync(req.body, { abortEarly: false })
@@ -21,7 +25,11 @@ const createNew = async (req, res, next) => {
 const update = async (req, res, next) => {
   const conditions = Joi.object({
     boardId: Joi.string().required().min(3).trim(),
-    columnId: Joi.string().required().min(3).trim()
+    columnId: Joi.string().required().min(3).trim(),
+    cover: Joi.string(),
+    deadline: Joi.date(),
+    description: Joi.string(),
+    assignee: Joi.string()
   })
   try {
     await conditions.validateAsync(req.body, {

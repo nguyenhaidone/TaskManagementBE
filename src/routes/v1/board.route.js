@@ -67,4 +67,20 @@ router
     BoardController.removeMemberUserByCreateController
   )
 
+router
+  .route('/add-new-user-to-blackList/:id')
+  .put(
+    AuthMiddleware.isAuth,
+    BoardMiddleware.isAccessBoard,
+    BoardController.addNewPeopleToBlackListController
+  )
+
+router
+  .route('/remove-user-from-blackList/:id')
+  .put(
+    AuthMiddleware.isAuth,
+    BoardMiddleware.isAccessBoard,
+    BoardController.removePeopleFromBlackListController
+  )
+
 export const boardRoute = router
